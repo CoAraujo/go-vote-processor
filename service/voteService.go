@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/coaraujo/go-vote-processor/stream"
-
 	mongo "github.com/coaraujo/go-vote-processor/config/mongo"
 	domain "github.com/coaraujo/go-vote-processor/domain"
+	stream "github.com/coaraujo/go-vote-processor/stream"
 )
 
 type VoteService struct {
@@ -26,6 +25,4 @@ func (v *VoteService) SendVote(w http.ResponseWriter, r *http.Request) {
 
 	var vote domain.Vote
 	_ = json.NewDecoder(r.Body).Decode(&vote)
-
-	v.RabbitStream.SendVote(vote)
 }

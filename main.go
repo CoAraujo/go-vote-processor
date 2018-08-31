@@ -18,13 +18,14 @@ func main() {
 
 	mongoCon := *mongo.NewConnection()
 	rabbitCon := *rabbit.NewConnection()
-	rabbitStream := *stream.NewRabbitStream(&rabbitCon)
+	rabbitStream := *stream.NewRabbitStream(&rabbitCon, "go.vote")
 	voteServ := service.NewVoteService(&mongoCon, &rabbitStream)
+
+	rabbitStream.ReceiveVote()
 
 	router := mux.NewRouter()
 	router.HandleFunc("/vote", voteServ.SendVote).Methods("POST")
-	// router.HandleFunc("/vote/{id}", voteServ.GetVote).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8001", router))
 
 	defer mongoCon.CloseConnection()
 	defer rabbitCon.CloseConnection()
