@@ -2,6 +2,6 @@ package domain
 
 type Vote struct {
 	Option         int    `json:"option"`
-	ParedaoID      string `json:"paredaoId"`
+	GroupID        string `json:"groupId"`
 	RecaptchaToken string `json:"recaptchaToken"`
 }
