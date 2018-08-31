@@ -1,6 +1,6 @@
 package domain
 
-type Paredao struct {
+type Group struct {
 	ID          string `json:"id"`
 	EndTime     string `json:"endTime"`
 	CreatedDate string `json:"createdDate"`

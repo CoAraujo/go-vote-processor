@@ -34,11 +34,11 @@ func (v *VoteRepository) InsertVote(vote domain.Vote) {
 	fmt.Println("[MONGODB] Value inserted: ", vote)
 }
 
-func (v *VoteRepository) GetVote(paredaoId string) {
-	fmt.Println("[MONGODB] Getting vote for paredaoId:", paredaoId)
+func (v *VoteRepository) GetVote(groupId string) {
+	fmt.Println("[MONGODB] Getting vote for groupId:", groupId)
 
 	result := domain.Vote{}
-	err := v.MongoDB.GetCollection(voteDatabase, voteCollectionName).Find(bson.M{"name": paredaoId}).One(&result)
+	err := v.MongoDB.GetCollection(voteDatabase, voteCollectionName).Find(bson.M{"name": groupId}).One(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
