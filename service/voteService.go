@@ -8,7 +8,7 @@ import (
 	"github.com/coaraujo/go-vote-processor/stream"
 
 	mongo "github.com/coaraujo/go-vote-processor/config/mongo"
-	"github.com/coaraujo/go-vote-processor/domain"
+	domain "github.com/coaraujo/go-vote-processor/domain"
 )
 
 type VoteService struct {

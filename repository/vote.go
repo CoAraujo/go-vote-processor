@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/coaraujo/go-vote-processor/config/mongo"
-	"github.com/coaraujo/go-vote-processor/domain"
+	mongo "github.com/coaraujo/go-vote-processor/config/mongo"
+	domain "github.com/coaraujo/go-vote-processor/domain"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -15,11 +15,11 @@ const (
 )
 
 type VoteRepository struct {
-	MongoDB *config.MongoDB
+	MongoDB *mongo.MongoDB
 }
 
 func newVoteRepository() *VoteRepository {
-	voteRepository := VoteRepository{MongoDB: config.NewConnection()}
+	voteRepository := VoteRepository{MongoDB: mongo.NewConnection()}
 	return &voteRepository
 }
 

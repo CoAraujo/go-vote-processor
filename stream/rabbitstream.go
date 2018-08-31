@@ -7,7 +7,7 @@ import (
 	"log"
 
 	config "github.com/coaraujo/go-vote-processor/config/rabbit"
-	"github.com/coaraujo/go-vote-processor/domain"
+	domain "github.com/coaraujo/go-vote-processor/domain"
 	"github.com/streadway/amqp"
 )
 
