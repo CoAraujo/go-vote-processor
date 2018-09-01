@@ -28,6 +28,7 @@ func (v *GroupService) GetGroup(w http.ResponseWriter, r *http.Request) {
 func (v *GroupService) CreateFirstGroup() {
 	fmt.Println("[GROUPSERVICE] Creating first group...")
 
+	//TODO: Evita de criar quando já tiver sido criado.
 	group := domain.Group{ID: "1", CreatedDate: time.Now().UTC(), EndTime: time.Now().UTC().AddDate(0, 0, 1), Options: []int{1, 2}}
 
 	v.GroupRepository.InsertGroup(&group)
