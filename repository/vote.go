@@ -23,7 +23,7 @@ func NewVoteRepository() *VoteRepository {
 	return &voteRepository
 }
 
-func (v *VoteRepository) InsertVote(vote domain.Vote) {
+func (v *VoteRepository) InsertVote(vote *domain.Vote) {
 	fmt.Println("[MONGODB] Inserting value: ", vote)
 
 	err := v.MongoDB.GetCollection(voteDatabase, voteCollectionName).Insert(vote)

@@ -23,7 +23,7 @@ func NewGroupRepository() *GroupRepository {
 	return &groupRepository
 }
 
-func (p *GroupRepository) InsertGroup(group domain.Group) {
+func (p *GroupRepository) InsertGroup(group *domain.Group) {
 	fmt.Println("[MONGODB] Inserting value: ", group)
 
 	err := p.MongoDB.GetCollection(groupDatabase, groupCollectionName).Insert(group)

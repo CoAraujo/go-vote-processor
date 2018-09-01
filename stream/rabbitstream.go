@@ -42,7 +42,7 @@ func (r *RabbitStream) ListenVotes(votes <-chan amqp.Delivery) {
 				fmt.Println("There was an error:", err)
 			}
 
-			r.VoteService.SendVote(&v)
+			r.VoteService.PersistVote(&v)
 		}
 	}()
 

@@ -20,6 +20,8 @@ func main() {
 	voteRep := *repository.NewVoteRepository()
 
 	voteServ := *service.NewVoteService(&voteRep, &groupRep)
+	groupServ := *service.NewGroupService(&voteRep, &groupRep)
+	groupServ.CreateFirstGroup()
 
 	rabbitStream := *stream.NewRabbitStream(&rabbitCon, &voteServ, "go.vote")
 	consumer := rabbitCon.CreateConsumerVote()

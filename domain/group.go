@@ -1,8 +1,10 @@
 package domain
 
+import "time"
+
 type Group struct {
-	ID          string `json:"id"`
-	EndTime     string `json:"endTime"`
-	CreatedDate string `json:"createdDate"`
-	Options     []int  `json:"options"`
+	ID          string    `json:"id"`
+	CreatedDate time.Time `json:"createdDate"`
+	EndTime     time.Time `json:"endTime"`
+	Options     []int     `json:"options"`
 }

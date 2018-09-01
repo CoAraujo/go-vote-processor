@@ -1,17 +1,21 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
-	mongo "github.com/coaraujo/go-vote-processor/config/mongo"
+	domain "github.com/coaraujo/go-vote-processor/domain"
+	repository "github.com/coaraujo/go-vote-processor/repository"
 )
 
 type GroupService struct {
-	MongoDB *mongo.MongoDB
+	VoteRepository  *repository.VoteRepository
+	GroupRepository *repository.GroupRepository
 }
 
-func NewGroupService(m *mongo.MongoDB) *GroupService {
-	groupService := GroupService{MongoDB: m}
+func NewGroupService(voteRepository *repository.VoteRepository, groupRepository *repository.GroupRepository) *GroupService {
+	groupService := GroupService{VoteRepository: voteRepository, GroupRepository: groupRepository}
 	return &groupService
 }
 
@@ -19,4 +23,12 @@ func (v *GroupService) GetGroup(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("[VOTESERVICE] Send vote was invoked...")
 	// var group domain.Group
 
+}
+
+func (v *GroupService) CreateFirstGroup() {
+	fmt.Println("[GROUPSERVICE] Creating first group...")
+
+	group := domain.Group{ID: "1", CreatedDate: time.Now().UTC(), EndTime: time.Now().UTC().AddDate(0, 0, 1), Options: []int{1, 2}}
+
+	v.GroupRepository.InsertGroup(&group)
 }
