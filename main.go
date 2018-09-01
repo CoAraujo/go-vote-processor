@@ -5,6 +5,7 @@ import (
 
 	mongo "github.com/coaraujo/go-vote-processor/config/mongo"
 	rabbit "github.com/coaraujo/go-vote-processor/config/rabbit"
+	repository "github.com/coaraujo/go-vote-processor/repository"
 	service "github.com/coaraujo/go-vote-processor/service"
 	stream "github.com/coaraujo/go-vote-processor/stream"
 )
@@ -15,7 +16,10 @@ func main() {
 	mongoCon := *mongo.NewConnection()
 	rabbitCon := *rabbit.NewConnection()
 
-	voteServ := *service.NewVoteService(&mongoCon)
+	groupRep := *repository.NewGroupRepository()
+	voteRep := *repository.NewVoteRepository()
+
+	voteServ := *service.NewVoteService(&voteRep, &groupRep)
 
 	rabbitStream := *stream.NewRabbitStream(&rabbitCon, &voteServ, "go.vote")
 	consumer := rabbitCon.CreateConsumerVote()

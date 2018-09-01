@@ -1,11 +1,13 @@
 package stream
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
 	config "github.com/coaraujo/go-vote-processor/config/rabbit"
-	"github.com/coaraujo/go-vote-processor/service"
+	"github.com/coaraujo/go-vote-processor/domain"
+	service "github.com/coaraujo/go-vote-processor/service"
 	"github.com/streadway/amqp"
 )
 
@@ -29,14 +31,22 @@ func NewRabbitStream(conn *config.RabbitMQ, voteService *service.VoteService, qu
 func (r *RabbitStream) ListenVotes(votes <-chan amqp.Delivery) {
 	forever := make(chan bool)
 
+	//Refazer aqui a goroutine.
 	go func() {
 		for vote := range votes {
 			log.Printf("Received a message: %s", vote.Body)
-			r.VoteService.SendVote2(vote.Body)
+
+			v := domain.Vote{}
+			err := json.Unmarshal(vote.Body, &v)
+			if err != nil {
+				fmt.Println("There was an error:", err)
+			}
+
+			r.VoteService.SendVote(&v)
 		}
 	}()
 
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	log.Printf("[*] Waiting for messages. To exit press CTRL+C")
 	<-forever
 }
 

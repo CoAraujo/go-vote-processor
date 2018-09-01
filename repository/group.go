@@ -18,7 +18,7 @@ type GroupRepository struct {
 	MongoDB *config.MongoDB
 }
 
-func newGroupRepository() *GroupRepository {
+func NewGroupRepository() *GroupRepository {
 	groupRepository := GroupRepository{MongoDB: config.NewConnection()}
 	return &groupRepository
 }
@@ -44,4 +44,5 @@ func (p *GroupRepository) GetGroupById(id string) *domain.Group {
 	}
 
 	fmt.Println("[MONGODB] Group:", result)
+	return &result
 }

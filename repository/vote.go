@@ -18,7 +18,7 @@ type VoteRepository struct {
 	MongoDB *mongo.MongoDB
 }
 
-func newVoteRepository() *VoteRepository {
+func NewVoteRepository() *VoteRepository {
 	voteRepository := VoteRepository{MongoDB: mongo.NewConnection()}
 	return &voteRepository
 }
@@ -34,7 +34,7 @@ func (v *VoteRepository) InsertVote(vote domain.Vote) {
 	fmt.Println("[MONGODB] Value inserted: ", vote)
 }
 
-func (v *VoteRepository) GetVote(groupId string) {
+func (v *VoteRepository) GetVoteByGroupId(groupId string) {
 	fmt.Println("[MONGODB] Getting vote for groupId:", groupId)
 
 	result := domain.Vote{}
