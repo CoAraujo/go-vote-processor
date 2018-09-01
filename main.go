@@ -13,17 +13,17 @@ import (
 func main() {
 	fmt.Println("Starting go-processor...")
 
-	mongoCon := *mongo.NewConnection()
-	rabbitCon := *rabbit.NewConnection()
+	mongoCon := mongo.NewConnection()
+	rabbitCon := rabbit.NewConnection()
 
-	groupRep := *repository.NewGroupRepository()
-	voteRep := *repository.NewVoteRepository()
+	groupRep := repository.NewGroupRepository()
+	voteRep := repository.NewVoteRepository()
 
-	voteServ := *service.NewVoteService(&voteRep, &groupRep)
-	groupServ := *service.NewGroupService(&voteRep, &groupRep)
+	voteServ := service.NewVoteService(voteRep, groupRep)
+	groupServ := service.NewGroupService(voteRep, groupRep)
 	groupServ.CreateFirstGroup()
 
-	rabbitStream := *stream.NewRabbitStream(&rabbitCon, &voteServ, "go.vote")
+	rabbitStream := *stream.NewRabbitStream(rabbitCon, voteServ, "go.vote")
 	consumer := rabbitCon.CreateConsumerVote()
 	rabbitStream.ListenVotes(consumer)
 
