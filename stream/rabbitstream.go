@@ -5,44 +5,34 @@ import (
 	"log"
 
 	config "github.com/coaraujo/go-vote-processor/config/rabbit"
+	"github.com/coaraujo/go-vote-processor/service"
 	"github.com/streadway/amqp"
 )
 
 type RabbitStream struct {
-	RabbitMQ   *config.RabbitMQ
-	Queue      amqp.Queue
-	QueueGroup string
+	RabbitMQ    *config.RabbitMQ
+	VoteService *service.VoteService
+	Queue       amqp.Queue
+	QueueGroup  string
 }
 
-func NewRabbitStream(conn *config.RabbitMQ, queue string) *RabbitStream {
+func NewRabbitStream(conn *config.RabbitMQ, voteService *service.VoteService, queue string) *RabbitStream {
 	q := "vote.groupBBB"
 	if queue != "" {
 		q = queue
 	}
-	rabbitStream := RabbitStream{RabbitMQ: conn, QueueGroup: q}
+	rabbitStream := RabbitStream{RabbitMQ: conn, VoteService: voteService, QueueGroup: q}
 	rabbitStream.Queue = conn.CreateQueue(q)
 	return &rabbitStream
 }
 
-func (r *RabbitStream) ReceiveVote() {
-	fmt.Println("[RABBITMQ] Receiving vote...")
-
-	votes, err := r.RabbitMQ.GetChannel().Consume(
-		r.Queue.Name, // queue
-		"",           // consumer
-		true,         // auto-ack
-		false,        // exclusive
-		false,        // no-local
-		false,        // no-wait
-		nil,          // args
-	)
-	failOnError(err, "Failed to register a consumer")
-
+func (r *RabbitStream) ListenVotes(votes <-chan amqp.Delivery) {
 	forever := make(chan bool)
 
 	go func() {
 		for vote := range votes {
 			log.Printf("Received a message: %s", vote.Body)
+			r.VoteService.SendVote2(vote.Body)
 		}
 	}()
 

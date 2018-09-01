@@ -38,7 +38,7 @@ func (v *VoteRepository) GetVote(groupId string) {
 	fmt.Println("[MONGODB] Getting vote for groupId:", groupId)
 
 	result := domain.Vote{}
-	err := v.MongoDB.GetCollection(voteDatabase, voteCollectionName).Find(bson.M{"name": groupId}).One(&result)
+	err := v.MongoDB.GetCollection(voteDatabase, voteCollectionName).Find(bson.M{"groupId": groupId}).One(&result)
 	if err != nil {
 		log.Fatal(err)
 	}

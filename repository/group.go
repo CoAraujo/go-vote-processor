@@ -34,14 +34,14 @@ func (p *GroupRepository) InsertGroup(group domain.Group) {
 	fmt.Println("[MONGODB] Value inserted: ", group)
 }
 
-func (p *GroupRepository) GetGroupById(groupId string) {
-	fmt.Println("[MONGODB] Getting group for groupId:", groupId)
+func (p *GroupRepository) GetGroupById(id string) *domain.Group {
+	fmt.Println("[MONGODB] Getting group by id:", id)
 
 	result := domain.Group{}
-	err := p.MongoDB.GetCollection(groupDatabase, groupCollectionName).Find(bson.M{"id": groupId}).One(&result)
+	err := p.MongoDB.GetCollection(groupDatabase, groupCollectionName).Find(bson.M{"id": id}).One(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("[MONGODB] Get group:", result)
+	fmt.Println("[MONGODB] Group:", result)
 }

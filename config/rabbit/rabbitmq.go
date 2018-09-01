@@ -49,6 +49,22 @@ func (r *RabbitMQ) CreateQueue(queueGroup string) amqp.Queue {
 	return r.Queue
 }
 
+func (r *RabbitMQ) CreateConsumerVote() <-chan amqp.Delivery {
+	fmt.Println("[RABBITMQ] Receiving vote...")
+
+	votes, err := r.Channel.Consume(
+		r.Queue.Name, // queue
+		"",           // consumer
+		true,         // auto-ack
+		false,        // exclusive
+		false,        // no-local
+		false,        // no-wait
+		nil,          // args
+	)
+	failOnError(err, "Failed to register a consumer")
+	return votes
+}
+
 func (r *RabbitMQ) getConnection() {
 	fmt.Println("[RABBITMQ] Connecting...")
 

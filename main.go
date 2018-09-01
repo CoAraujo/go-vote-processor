@@ -2,15 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/coaraujo/go-vote-processor/stream"
 
 	mongo "github.com/coaraujo/go-vote-processor/config/mongo"
 	rabbit "github.com/coaraujo/go-vote-processor/config/rabbit"
 	service "github.com/coaraujo/go-vote-processor/service"
-	"github.com/gorilla/mux"
+	stream "github.com/coaraujo/go-vote-processor/stream"
 )
 
 func main() {
@@ -18,14 +14,12 @@ func main() {
 
 	mongoCon := *mongo.NewConnection()
 	rabbitCon := *rabbit.NewConnection()
-	rabbitStream := *stream.NewRabbitStream(&rabbitCon, "go.vote")
-	voteServ := service.NewVoteService(&mongoCon, &rabbitStream)
 
-	rabbitStream.ReceiveVote()
+	voteServ := *service.NewVoteService(&mongoCon)
 
-	router := mux.NewRouter()
-	router.HandleFunc("/vote", voteServ.SendVote).Methods("POST")
-	log.Fatal(http.ListenAndServe(":8001", router))
+	rabbitStream := *stream.NewRabbitStream(&rabbitCon, &voteServ, "go.vote")
+	consumer := rabbitCon.CreateConsumerVote()
+	rabbitStream.ListenVotes(consumer)
 
 	defer mongoCon.CloseConnection()
 	defer rabbitCon.CloseConnection()
